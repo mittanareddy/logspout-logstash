@@ -63,7 +63,7 @@ func (a *LogstashAdapter) Stream(logstream chan *router.Message) {
 }
 
 type DockerInfo struct {
-	Name     string `json:"name1"`
+	Name     string `json:"name2"`
 	ID       string `json:"id"`
 	Image    string `json:"image"`
 	Hostname string `json:"hostname"`
