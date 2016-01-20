@@ -7,6 +7,11 @@ import (
 	"net"
 
 	"github.com/gliderlabs/logspout/router"
+	"github.com/rancher/go-rancher-metadata/metadata"
+)
+
+const (
+	metadataUrl = "http://rancher-metadata/2015-07-25"
 )
 
 func init() {
@@ -39,7 +44,15 @@ func NewLogstashAdapter(route *router.Route) (router.LogAdapter, error) {
 
 // Stream implements the router.LogAdapter interface.
 func (a *LogstashAdapter) Stream(logstream chan *router.Message) {
+	racherMetaData := metadata.NewClient(metadataUrl)
+	stackname := ""
 	for m := range logstream {
+	    stack, err := m.GetSelfStack()
+		if err != nil {
+			log.Println("Error reading metadata version: ", err)
+        }else {
+			stackname = stack.name
+		}		
 		msg := LogstashMessage{
 			Message: m.Data,
 			Docker: DockerInfo{
@@ -47,6 +60,9 @@ func (a *LogstashAdapter) Stream(logstream chan *router.Message) {
 				ID:       m.Container.ID,
 				Image:    m.Container.Config.Image,
 				Hostname: m.Container.Config.Hostname,
+			},
+			Rancher: RancherInfo{
+				StackName: stackname,
 			},
 		}
 		js, err := json.Marshal(msg)
@@ -63,14 +79,19 @@ func (a *LogstashAdapter) Stream(logstream chan *router.Message) {
 }
 
 type DockerInfo struct {
-	Name     string `json:"name2"`
+	Name     string `json:"name"`
 	ID       string `json:"id"`
 	Image    string `json:"image"`
 	Hostname string `json:"hostname"`
+}
+
+type RancherInfo struct {
+    Stackname string `json:"stackname"`
 }
 
 // LogstashMessage is a simple JSON input to Logstash.
 type LogstashMessage struct {
 	Message string     `json:"message"`
 	Docker  DockerInfo `json:"docker"`
+	Rancher RancherInfo `json:"rancher"`
 }
