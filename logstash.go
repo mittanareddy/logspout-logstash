@@ -45,15 +45,13 @@ func NewLogstashAdapter(route *router.Route) (router.LogAdapter, error) {
 // Stream implements the router.LogAdapter interface.
 func (a *LogstashAdapter) Stream(logstream chan *router.Message) {
 	racherMetaData := metadata.NewClient(metadataUrl)
-	var err error
-	var stack metadata.Stack
 	stackname := ""
 	for m := range logstream {
-	    stack, err := racherMetaData.GetSelfStack()
+	   newVersion, err := racherMetaData.GetVersion()
 		if err != nil {
 			log.Println("Error reading metadata version: ", err)
         }else {
-			stackname = stack.Name
+			stackname = newVersion
 		}		
 		msg := LogstashMessage{
 			Message: m.Data,
