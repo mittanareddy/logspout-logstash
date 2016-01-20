@@ -86,7 +86,7 @@ type DockerInfo struct {
 }
 
 type RancherInfo struct {
-    Stackname string `json:"stackname"`
+    StackName string `json:"stackname"`
 }
 
 // LogstashMessage is a simple JSON input to Logstash.
