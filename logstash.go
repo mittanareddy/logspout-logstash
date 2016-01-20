@@ -7,7 +7,7 @@ import (
 	"net"
 
 	"github.com/gliderlabs/logspout/router"
-	"github.com/mittanareddy/go-rancher-metadata/metadata"
+    "github.com/mittanareddy/go-rancher-metadata/metadata"
 )
 
 const (
@@ -47,11 +47,11 @@ func (a *LogstashAdapter) Stream(logstream chan *router.Message) {
 	racherMetaData := metadata.NewClient(metadataUrl)
 	stackname := ""
 	for m := range logstream {
-	   newVersion, err := racherMetaData.GetVersion()
+	    stack, err := racherMetaData.GetSelfStack()
 		if err != nil {
 			log.Println("Error reading metadata version: ", err)
         }else {
-			stackname = newVersion
+			stackname = stack.Name
 		}		
 		msg := LogstashMessage{
 			Message: m.Data,
