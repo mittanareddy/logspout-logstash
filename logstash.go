@@ -47,11 +47,11 @@ func (a *LogstashAdapter) Stream(logstream chan *router.Message) {
 	racherMetaData := metadata.NewClient(metadataUrl)
 	stackname := ""
 	for m := range logstream {
-	    stack, err := racherMetaData.GetSelfStack()
+	    stackNameTmp, err := racherMetaData.GetStackNameByContainerName(m.Container.Name)
 		if err != nil {
 			log.Println("Error reading metadata version: ", err)
         }else {
-			stackname = stack.Name
+			stackname = stackNameTmp
 		}		
 		msg := LogstashMessage{
 			Message: m.Data,
