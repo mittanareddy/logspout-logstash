@@ -45,6 +45,8 @@ func NewLogstashAdapter(route *router.Route) (router.LogAdapter, error) {
 // Stream implements the router.LogAdapter interface.
 func (a *LogstashAdapter) Stream(logstream chan *router.Message) {
 	racherMetaData := metadata.NewClient(metadataUrl)
+	var err error
+	var stack metadata.Stack
 	stackname := ""
 	for m := range logstream {
 	    stack, err := racherMetaData.GetSelfStack()
