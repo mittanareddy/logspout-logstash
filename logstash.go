@@ -47,7 +47,7 @@ func (a *LogstashAdapter) Stream(logstream chan *router.Message) {
 	racherMetaData := metadata.NewClient(metadataUrl)
 	stackname := ""
 	for m := range logstream {
-	    stack, err := m.GetSelfStack()
+	    stack, err := racherMetaData.GetSelfStack()
 		if err != nil {
 			log.Println("Error reading metadata version: ", err)
         }else {
