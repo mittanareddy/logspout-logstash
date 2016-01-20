@@ -7,7 +7,7 @@ import (
 	"net"
 
 	"github.com/gliderlabs/logspout/router"
-	"github.com/rancher/go-rancher-metadata/metadata"
+	"github.com/mittanareddy/go-rancher-metadata/metadata"
 )
 
 const (
