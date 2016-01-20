@@ -51,7 +51,7 @@ func (a *LogstashAdapter) Stream(logstream chan *router.Message) {
 		if err != nil {
 			log.Println("Error reading metadata version: ", err)
         }else {
-			stackname = stack.name
+			stackname = stack.Name
 		}		
 		msg := LogstashMessage{
 			Message: m.Data,
